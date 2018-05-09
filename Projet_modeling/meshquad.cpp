@@ -5,7 +5,7 @@
 void MeshQuad::clear()
 {
     m_points.clear();
-    m_quad_indice.clear();
+    m_quad_indices.clear();
 }
 
 int MeshQuad::add_vertex(const Vec3& P)
@@ -55,8 +55,22 @@ void MeshQuad::create_cube()
 {
 	clear();
 	// ajouter 8 sommets (-1 +1)
+    int pt0 = add_vertex(Vec3(1,1,0));
+    int pt1 = add_vertex(Vec3(0,1,0));
+    int pt2 = add_vertex(Vec3(0,0,0));
+    int pt3 = add_vertex(Vec3(1,0,0));
+    int pt4 = add_vertex(Vec3(1,1,-1));
+    int pt5 = add_vertex(Vec3(0,1,-1));
+    int pt6 = add_vertex(Vec3(0,0,-1));
+    int pt7 = add_vertex(Vec3(1,0,-1));
 
 	// ajouter 6 faces (sens trigo)
+    add_quad(pt0,pt1,pt2,pt3);
+    add_quad(pt4,pt5,pt1,pt0);
+    add_quad(pt7,pt6,pt5,pt4);
+    add_quad(pt3,pt2,pt6,pt7);
+    add_quad(pt4,pt0,pt3,pt7);
+    add_quad(pt1,pt5,pt6,pt2);
 
 	gl_update();
 }
