@@ -205,16 +205,36 @@ bool MeshQuad::is_points_in_quad(const Vec3& P, const Vec3& A, const Vec3& B, co
 bool MeshQuad::intersect_ray_quad(const Vec3& P, const Vec3& Dir, int q, Vec3& inter)
 {
 	// recuperation des indices de points
-	// recuperation des points
+    int i1 = m_quad_indices[q];
+    int i2 = m_quad_indices[q+1];
+    int i3 = m_quad_indices[q+2];
+    int i4 = m_quad_indices[q+3];
+
+    // recuperation des points
+    Vec3 pt1 = m_points[i1];
+    Vec3 pt2 = m_points[i2];
+    Vec3 pt3 = m_points[i3];
+    Vec3 pt4 = m_points[i4];
 
 	// calcul de l'equation du plan (N+d)
+    Vec3 n = normal_of(pt1,pt2,pt3);
+    int d = vec_dot(pt1,n);
 
     // calcul de l'intersection rayon plan
-	// I = P + alpha*Dir est dans le plan => calcul de alpha
+    float t = (d-vec_dot(P,n))/(vec_dot(Dir,n));
 
-	// alpha => calcul de I
+        if( t == INFINITY) {
+            return false;
+        }
 
-	// I dans le quad ?
+        // alpha => calcul de I
+        Vec3 I = P+t*Dir;
+
+        // I dans le quad ?
+        if(is_points_in_quad(I,pt1,pt2,pt3,pt4)) {
+            inter = I;
+            return true;
+        }
 
     return false;
 }
