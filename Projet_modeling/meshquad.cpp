@@ -27,19 +27,42 @@ void MeshQuad::convert_quads_to_tris(const std::vector<int>& quads, std::vector<
 {
 	tris.clear();
 	tris.reserve(3*quads.size()/2);
-
 	// Pour chaque quad on genere 2 triangles
 	// Attention a repecter l'orientation des triangles
+
+    for(unsigned int i=0; i<quads.size(); i=i+4) {
+        tris.push_back(quads[i]);
+        tris.push_back(quads[i+1]);
+        tris.push_back(quads[i+3]);
+        tris.push_back(quads[i+1]);
+        tris.push_back(quads[i+2]);
+        tris.push_back(quads[i+3]);
+    }
 
 }
 
 void MeshQuad::convert_quads_to_edges(const std::vector<int>& quads, std::vector<int>& edges)
 {
 	edges.clear();
-	edges.reserve(quads.size()); // ( *2 /2 !)
+    edges.reserve(quads.size()*2); // ( *2 /2 !)
 	// Pour chaque quad on genere 4 aretes, 1 arete = 2 indices.
 	// Mais chaque arete est commune a 2 quads voisins !
 	// Comment n'avoir qu'une seule fois chaque arete ?
+
+    for(unsigned int i =0 ; i<quads.size() ; i = i+4) {
+        edges.push_back(quads[i]);
+        edges.push_back(quads[i+1]);
+
+        edges.push_back(quads[i+1]);
+        edges.push_back(quads[i+2]);
+
+        edges.push_back(quads[i+2]);
+        edges.push_back(quads[i+3]);
+
+        edges.push_back(quads[i+3]);
+        edges.push_back(quads[i]);
+
+    }
 
 }
 
