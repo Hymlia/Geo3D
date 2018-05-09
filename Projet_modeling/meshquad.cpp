@@ -69,8 +69,45 @@ void MeshQuad::convert_quads_to_edges(const std::vector<int>& quads, std::vector
 
 void MeshQuad::bounding_sphere(Vec3& C, float& R)
 {
-	// C=
-	// R=
+       // C = Moyenne de tous les vertex
+       // R = Maximum du parcours de tout les vertex -> calcule de la distance entre centre et chaque vertex
+
+        float x = 0.0;
+        float y = 0.0;
+        float z = 0.0;
+
+        //on fait la moyenne
+        for(unsigned int i = 0; i <m_points.size(); i++)
+        {
+            x += m_points[i].x;
+            y += m_points[i].y;
+            z += m_points[i].z;
+        }
+
+        x = x/m_points.size();
+        y = y/m_points.size();
+        z = z/m_points.size();
+
+        C.x = x;
+        C.y = y;
+        C.z = z;
+
+
+        float max = 0.0;
+        int indice = 0;
+
+        for(unsigned int i = 0; i <m_points.size(); i++)
+        {
+            float comparaison = m_points[i].x*m_points[i].x + m_points[i].y*m_points[i].y + m_points[i].z*m_points[i].z;
+            if( comparaison > max)
+            {
+                max = comparaison;
+                indice = i;
+            }
+        }
+
+
+        R = sqrt(max);
 }
 
 
@@ -120,6 +157,8 @@ bool MeshQuad::is_points_in_quad(const Vec3& P, const Vec3& A, const Vec3& B, co
 
 	// P est-il au dessus des 4 plans contenant chacun la normale au quad et une arete AB/BC/CD/DA ?
 	// si oui il est dans le quad
+
+
 
     return true;
 }
