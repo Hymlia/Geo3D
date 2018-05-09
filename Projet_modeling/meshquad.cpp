@@ -272,26 +272,54 @@ int MeshQuad::intersected_closest(const Vec3& P, const Vec3& Dir)
 
 Mat4 MeshQuad::local_frame(int q)
 {
-	// Repere locale = Matrice de transfo avec
-	// les trois premieres colones: X,Y,Z locaux
-	// la derniere colonne l'origine du repere
+    /*
+        Repere locale = Matrice de transfo avec
+        les trois premieres colones: X,Y,Z locaux
+        la derniere colonne l'origine du repere
+        -> Mat4 = Vec4 X + Vec4 Y + Vec4 Z + Vec4 O
+        ici Z = N et X = AB
+        Origine le centre de la face
+        longueur des axes : [AB]/2
+        */
 
-	// ici Z = N et X = AB
-	// Origine le centre de la face
-	// longueur des axes : [AB]/2
+    // recuperation des indices de points
+    int i1 = m_quad_indices[q];
+    int i2 = m_quad_indices[q+1];
+    int i3 = m_quad_indices[q+2];
+    int i4 = m_quad_indices[q+3];
 
-	// recuperation des indices de points
-	// recuperation des points
+    // recuperation des points
+    Vec3 pt1 = m_points[i1];
+    Vec3 pt2 = m_points[i2];
+    Vec3 pt3 = m_points[i3];
+    Vec3 pt4 = m_points[i4];
 
 	// calcul de Z:N / X:AB -> Y
+    Vec3 Z = glm::normalize(normal_of(pt1, pt2, pt3));
+    Vec3 X = glm::normalize(pt2 - pt1);
+    Vec3 Y = glm::normalize(glm::cross(X, Z));
+
 
 	// calcul du centre
+    float Ox = (pt1.x+pt2.x+pt3.x+pt4.x) / 4 ;
+    float Oy = (pt1.y+pt2.y+pt3.y+pt4.y) / 4;
+    float Oz = (pt1.z+pt2.z+pt3.z+pt4.z) / 4 ;
+    Vec3 O = Vec3(Ox,Oy,Oz);
 
-	// calcul de la taille
+    // calcul de la taille
+    float taille = lenght(pt2-pt1) /2 ;
 
 	// calcul de la matrice
+    Vec4 X4 = Vec4(X.x,X.y,X.z,0);
+    Vec4 Y4 = Vec4(Y.x,Y.y,Y.z,0);
+    Vec4 Z4 = Vec4(Z.x,Z.y,Z.z,0);
+    Vec4 O4 = Vec4(O.x,O.y,O.z,1);
 
-    return Mat4();
+    Mat4 res = Mat4(X4,Y4,Z4,O4);
+    res = res*scale(taille);
+
+
+    return res;
 }
 
 void MeshQuad::extrude_quad(int q)
