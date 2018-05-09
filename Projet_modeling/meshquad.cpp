@@ -158,7 +158,46 @@ bool MeshQuad::is_points_in_quad(const Vec3& P, const Vec3& A, const Vec3& B, co
 	// P est-il au dessus des 4 plans contenant chacun la normale au quad et une arete AB/BC/CD/DA ?
 	// si oui il est dans le quad
 
+    float res = -1;
+    float d = 0;
 
+    Vec3 n = normal_of(A,B,C);
+    Vec3 AB = Vec3(B.x-A.x, B.y-A.y , B.z-A.z);
+    Vec3 BC = Vec3(C.x-B.x , C.y-B.y , C.z-B.z);
+    Vec3 CD = Vec3(D.x-C.x , D.y-C.y , D.z - C.z);
+    Vec3 DA = Vec3(A.x-D.x, A.y-D.y, A.z-D.z);
+
+    //normale et AB
+    Vec3 n1 = vec_cross(n,AB);
+    d = vec_dot(n1,A);
+    res = vec_dot(n1,P) - d;
+    if(res < 0) {
+        return false;
+    }
+
+    //normale et BC
+    Vec3 n2 = vec_cross(n,BC);
+    d= vec_dot(n2,B);
+    res = vec_dot(n2,P) -d;
+    if(res < 0) {
+        return false;
+    }
+
+    //normale et CD
+    Vec3 n3 = vec_cross(n,CD);
+    d= vec_dot(n3,C);
+    res = vec_dot(n3,P) -d;
+    if(res < 0) {
+        return false;
+    }
+
+    //normale et DA
+    Vec3 n4 = vec_cross(n,DA);
+    d= vec_dot(n4,D);
+    res = vec_dot(n4,P) -d;
+    if(res < 0) {
+        return false;
+    }
 
     return true;
 }
