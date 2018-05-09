@@ -341,6 +341,7 @@ void MeshQuad::extrude_quad(int q)
 
 	// calcul de la hauteur
 
+
 	// calcul et ajout des 4 nouveaux points
 
 	// on remplace le quad initial par le quad du dessu
