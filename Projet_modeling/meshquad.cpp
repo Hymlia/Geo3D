@@ -324,11 +324,20 @@ Mat4 MeshQuad::local_frame(int q)
 
 void MeshQuad::extrude_quad(int q)
 {
-	// recuperation des indices de points
+    // recuperation des indices de points
+    int i1 = m_quad_indices[q];
+    int i2 = m_quad_indices[q+1];
+    int i3 = m_quad_indices[q+2];
+    int i4 = m_quad_indices[q+3];
 
-	// recuperation des points
+    // recuperation des points
+    Vec3 pt1 = m_points[i1];
+    Vec3 pt2 = m_points[i2];
+    Vec3 pt3 = m_points[i3];
+    Vec3 pt4 = m_points[i4];
 
 	// calcul de la normale
+    Vec3 n = normal_of(pt1,pt2,pt3);
 
 	// calcul de la hauteur
 
