@@ -15,10 +15,25 @@ const Vec3 BLANC   = {1,1,1};
 const Vec3 GRIS    = {0.5,0.5,0.5};
 const Vec3 NOIR    = {0,0,0};
 
+void fleche(const Primitives& prim, const Mat4& trf, Vec3 coul) {
+    prim.draw_cone(trf * translate(0,0,3), coul);
+    prim.draw_cylinder(trf * translate(0,0,1.5)*scale(0.5f,0.5f,2.0f), coul);
 
+}
 
 void draw_repere(const Primitives& prim, const Mat4& tr)
 {
+    //sphere origine
+    prim.draw_sphere(tr,BLANC);
+
+    //fleche sur z
+    fleche(prim,tr, BLEU);
+
+    //fleche sur y
+    fleche(prim,tr * rotateX(-90), VERT);
+
+    //fleche sur x
+    fleche(prim,tr *rotateY(90), ROUGE);
 }
 
 
