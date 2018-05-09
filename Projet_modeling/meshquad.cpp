@@ -247,6 +247,24 @@ int MeshQuad::intersected_closest(const Vec3& P, const Vec3& Dir)
 	// on garde le plus proche (de P)
 
 	int inter = -1;
+    Vec3 intercourante;
+    float min = 0;
+
+    for(int i =0 ; i<m_quad_indices.size(); i=i+4) {
+        if(intersect_ray_quad(P, Dir, i,intercourante)) {
+            if(inter ==-1) {
+                min = (intercourante.x-P.x)*(intercourante.x-P.x)+(intercourante.y-P.y)*(intercourante.y-P.y)+(intercourante.z-P.z)*(intercourante.z-P.z);
+                inter = i;
+            }
+            else {
+                float compare = (intercourante.x-P.x)*(intercourante.x-P.x)+(intercourante.y-P.y)*(intercourante.y-P.y)+(intercourante.z-P.z)*(intercourante.z-P.z);
+                if(compare<min) {
+                    min = compare;
+                    inter = i;
+                }
+            }
+        }
+    }
 
 	return inter;
 }
