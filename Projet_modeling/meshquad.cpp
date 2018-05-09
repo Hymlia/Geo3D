@@ -104,7 +104,13 @@ Vec3 MeshQuad::normal_of(const Vec3& A, const Vec3& B, const Vec3& C)
 	// le produit vectoriel n'est pas commutatif U ^ V = - V ^ U
 	// ne pas oublier de normaliser le resultat.
 
-	return Vec3();
+    Vec3 AB = Vec3(B.x-A.x, B.y-A.y , B.z-A.z);
+    Vec3 BC = Vec3(C.x-B.x , C.y-B.y , C.z-B.z);
+
+    Vec3 ABBC = glm::cross(AB,BC);
+    Vec3 res = glm::normalize(ABBC);
+
+    return res;
 }
 
 
