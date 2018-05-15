@@ -307,7 +307,7 @@ Mat4 MeshQuad::local_frame(int q)
     Vec3 O = Vec3(Ox,Oy,Oz);
 
     // calcul de la taille
-    float taille = lenght(pt2-pt1) /2 ;
+    float taille = glm::length(pt2-pt1) /2 ;
 
 	// calcul de la matrice
     Vec4 X4 = Vec4(X.x,X.y,X.z,0);
@@ -320,6 +320,29 @@ Mat4 MeshQuad::local_frame(int q)
 
 
     return res;
+}
+
+float MeshQuad::area_of_quad(int q) {
+    // recuperation des indices de points
+    int i1 = m_quad_indices[q];
+    int i2 = m_quad_indices[q+1];
+    int i3 = m_quad_indices[q+2];
+    int i4 = m_quad_indices[q+3];
+
+    // recuperation des points
+    Vec3 pt1 = m_points[i1];
+    Vec3 pt2 = m_points[i2];
+    Vec3 pt3 = m_points[i3];
+    Vec3 pt4 = m_points[i4];
+
+     //aire triangle 1 2 4
+     float aire1 = vec_length(vec_cross(pt2-pt1,pt1-pt4))/2.0f;
+
+     //aire triangle 2 3 4
+      float aire2 = vec_length(vec_cross(pt3-pt2,pt4-pt3))/2.0f;
+
+      return aire1 + aire2 ;
+
 }
 
 void MeshQuad::extrude_quad(int q)
@@ -340,13 +363,32 @@ void MeshQuad::extrude_quad(int q)
     Vec3 n = normal_of(pt1,pt2,pt3);
 
 	// calcul de la hauteur
-
+    float hauteur = sqrt(area_of_quad(q));
 
 	// calcul et ajout des 4 nouveaux points
+    Vec3 npt1 = pt1 + n*hauteur;
+    Vec3 npt2 = pt2 + n*hauteur;
+    Vec3 npt3 = pt3 + n*hauteur;
+    Vec3 npt4 = pt4 + n*hauteur;
 
-	// on remplace le quad initial par le quad du dessu
+    int ni1 = add_vertex(npt1);
+    int ni2 = add_vertex(npt2);
+    int ni3 = add_vertex(npt3);
+    int ni4 = add_vertex(npt4);
+
+    // on remplace le quad initial par le quad du dessus
+    m_quad_indices[q] = ni1;
+    m_quad_indices[q+1] = n12;
+    m_quad_indices[q+2] = n13;
+    m_quad_indices[q+3] = n14;
+
 
 	// on ajoute les 4 quads des cotes
+    add_quad(ni1,i1,i2,ni2);
+    add_quad(ni2,i2,i3,ni3);
+    add_quad(ni3,i3,i4,ni4);
+    add_quad(ni4,i4,i1,ni1);
+
 
    gl_update();
 }
@@ -354,7 +396,15 @@ void MeshQuad::extrude_quad(int q)
 void MeshQuad::transfo_quad(int q, const glm::mat4& tr)
 {
 	// recuperation des indices de points
+    int i1 = m_quad_indices[q];
+    int i2 = m_quad_indices[q+1];
+    int i3 = m_quad_indices[q+2];
+    int i4 = m_quad_indices[q+3];
 	// recuperation des (references de) points
+    Vec3 pt1 = m_points[i1];
+    Vec3 pt2 = m_points[i2];
+    Vec3 pt3 = m_points[i3];
+    Vec3 pt4 = m_points[i4];
 
 	// generation de la matrice de transfo globale:
 	// indice utilisation de glm::inverse() et de local_frame
