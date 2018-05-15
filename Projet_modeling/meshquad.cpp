@@ -11,6 +11,7 @@ void MeshQuad::clear()
 int MeshQuad::add_vertex(const Vec3& P)
 {
     m_points.push_back(P);
+    std::cout << "dans add taille tab " << m_points.size() << std::endl;
     return m_points.size()-1;
 }
 
@@ -94,7 +95,6 @@ void MeshQuad::bounding_sphere(Vec3& C, float& R)
 
 
         float max = 0.0;
-        int indice = 0;
 
         for(unsigned int i = 0; i <m_points.size(); i++)
         {
@@ -102,7 +102,6 @@ void MeshQuad::bounding_sphere(Vec3& C, float& R)
             if( comparaison > max)
             {
                 max = comparaison;
-                indice = i;
             }
         }
 
@@ -142,10 +141,10 @@ Vec3 MeshQuad::normal_of(const Vec3& A, const Vec3& B, const Vec3& C)
 	// ne pas oublier de normaliser le resultat.
 
     Vec3 AB = Vec3(B.x-A.x, B.y-A.y , B.z-A.z);
-    Vec3 BC = Vec3(C.x-B.x , C.y-B.y , C.z-B.z);
+    Vec3 AC = Vec3(C.x-A.x , C.y-A.y , C.z-A.z);
 
-    Vec3 ABBC = glm::cross(AB,BC);
-    Vec3 res = glm::normalize(ABBC);
+    Vec3 ABAC = glm::cross(AB,AC);
+    Vec3 res = glm::normalize(ABAC);
 
     return res;
 }
@@ -347,6 +346,7 @@ float MeshQuad::area_of_quad(int q) {
 
 void MeshQuad::extrude_quad(int q)
 {
+    std::cout << "dans extrude, q = " << q << std::endl;
     // recuperation des indices de points
     int i1 = m_quad_indices[q];
     int i2 = m_quad_indices[q+1];
@@ -361,9 +361,12 @@ void MeshQuad::extrude_quad(int q)
 
 	// calcul de la normale
     Vec3 n = normal_of(pt1,pt2,pt3);
+    std::cout << "n = " << n << std::endl;
 
 	// calcul de la hauteur
     float hauteur = sqrt(area_of_quad(q));
+    std::cout << "h = " << hauteur << std::endl;
+
 
 	// calcul et ajout des 4 nouveaux points
     Vec3 npt1 = pt1 + n*hauteur;
@@ -371,10 +374,13 @@ void MeshQuad::extrude_quad(int q)
     Vec3 npt3 = pt3 + n*hauteur;
     Vec3 npt4 = pt4 + n*hauteur;
 
+    std::cout << "npt = " << npt1 << npt2 <<npt3 <<npt4 << std::endl;
+
     int ni1 = add_vertex(npt1);
     int ni2 = add_vertex(npt2);
     int ni3 = add_vertex(npt3);
     int ni4 = add_vertex(npt4);
+    std::cout << "nis = " << ni1 << ni2 <<ni3 <<ni4 << std::endl;
 
     // on remplace le quad initial par le quad du dessus
     m_quad_indices[q] = ni1;
@@ -382,12 +388,14 @@ void MeshQuad::extrude_quad(int q)
     m_quad_indices[q+2] = ni3;
     m_quad_indices[q+3] = ni4;
 
+    std::cout << "m_quad_indices[q] = " << m_quad_indices[q] << std::endl;
+
 
 	// on ajoute les 4 quads des cotes
-    add_quad(ni1,i1,i2,ni2);
     add_quad(ni2,i2,i3,ni3);
-    add_quad(ni3,i3,i4,ni4);
     add_quad(ni4,i4,i1,ni1);
+    add_quad(ni3,i3,i4,ni4);
+    add_quad(ni1,i1,i2,ni2);
 
 
    gl_update();
