@@ -11,7 +11,6 @@ void MeshQuad::clear()
 int MeshQuad::add_vertex(const Vec3& P)
 {
     m_points.push_back(P);
-    std::cout << "dans add taille tab " << m_points.size() << std::endl;
     return m_points.size()-1;
 }
 
@@ -361,11 +360,9 @@ void MeshQuad::extrude_quad(int q)
 
 	// calcul de la normale
     Vec3 n = normal_of(pt1,pt2,pt3);
-    std::cout << "n = " << n << std::endl;
 
 	// calcul de la hauteur
     float hauteur = sqrt(area_of_quad(q));
-    std::cout << "h = " << hauteur << std::endl;
 
 
 	// calcul et ajout des 4 nouveaux points
@@ -374,21 +371,17 @@ void MeshQuad::extrude_quad(int q)
     Vec3 npt3 = pt3 + n*hauteur;
     Vec3 npt4 = pt4 + n*hauteur;
 
-    std::cout << "npt = " << npt1 << npt2 <<npt3 <<npt4 << std::endl;
 
     int ni1 = add_vertex(npt1);
     int ni2 = add_vertex(npt2);
     int ni3 = add_vertex(npt3);
     int ni4 = add_vertex(npt4);
-    std::cout << "nis = " << ni1 << ni2 <<ni3 <<ni4 << std::endl;
 
     // on remplace le quad initial par le quad du dessus
     m_quad_indices[q] = ni1;
     m_quad_indices[q+1] = ni2;
     m_quad_indices[q+2] = ni3;
     m_quad_indices[q+3] = ni4;
-
-    std::cout << "m_quad_indices[q] = " << m_quad_indices[q] << std::endl;
 
 
 	// on ajoute les 4 quads des cotes

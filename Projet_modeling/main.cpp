@@ -40,7 +40,17 @@ void draw_repere(const Primitives& prim, const Mat4& tr)
 void star(MeshQuad& m)
 {
 	m.create_cube();
-	// ...
+    int facecourante = 0;
+    while(facecourante <=20) {
+        for(int i=1 ; i<20;i++) {
+            m.extrude_quad(facecourante);
+            m.shrink_quad(facecourante, 0.8);
+            m.tourne_quad(facecourante,7);
+        }
+    facecourante = facecourante + 4;
+    }
+
+
 }
 
 
