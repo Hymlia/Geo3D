@@ -427,16 +427,23 @@ void MeshQuad::transfo_quad(int q, const glm::mat4& tr)
 
 void MeshQuad::decale_quad(int q, float d)
 {
-
+    Mat4 transfo = translate(0,0,d);
+    transfo_quad(q,transfo);
+    gl_update();
 }
 
 void MeshQuad::shrink_quad(int q, float s)
 {
-
+    Mat4 hom = scale(s);
+    transfo_quad(q,hom);
+    gl_update();
 }
 
 void MeshQuad::tourne_quad(int q, float a)
 {
+    Mat4 rot = rotateZ(a);
+    transfo_quad(q,rot);
+    gl_update();
 
 }
 
