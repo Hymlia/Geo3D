@@ -53,8 +53,51 @@ void star(MeshQuad& m)
 
 }
 
+void glace(MeshQuad& m) {
+    m.create_cube();
+    int ftoextrude = 0;
+    int ftoturn1 = 4;
+    int ftoturn2 = 12;
+    int ftoturn3 = 16;
+    int ftoturn4 = 20;
+
+    float angle1 = 10;
+    float angle2 = 20;
+    float decalage = 5;
+
+    m.decale_quad(ftoextrude,decalage);
+
+    for(int i=0; i<100;i++) {
+
+        if(i%10 == 0)
+        {
+            decalage = 5 - (i/20.0f);
+        }
+
+        m.tourne_quad(ftoturn1, angle1);
+        m.tourne_quad(ftoturn2, -1*angle1);
+        m.tourne_quad(ftoturn3, angle2);
+        m.tourne_quad(ftoturn4, -1*angle2);
+        m.extrude_quad(ftoextrude);
+
+        m.decale_quad(ftoextrude,decalage);
+
+        if(ftoturn1 == 4) {
+            ftoturn1 = 36;
+            ftoturn2 = 32;
+            ftoturn3 = 28;
+            ftoturn4 = 24;
+        }
+        else {
+            ftoturn1 = ftoturn1 +16;
+            ftoturn2 = ftoturn2 +16;
+            ftoturn3 = ftoturn3 +16;
+            ftoturn4 = ftoturn4 +16;
+        }
+    }
 
 
+}
 
 
 
@@ -139,10 +182,14 @@ int main(int argc, char *argv[])
 			// Attention au cas m_selected_quad == -1
 
 			// generation d'objet
+            //etoile
 			case Qt::Key_S:
 				star(mesh);
 				break;
-			// ....
+            // glace
+        case Qt::Key_G:
+            glace(mesh);
+            break;
 
 
 			default:
