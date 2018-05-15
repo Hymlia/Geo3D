@@ -117,6 +117,13 @@ public:
 	 */
 	Mat4 local_frame(int q);
 
+    /**
+     * @brief calcul l'air d'un quatrilatère
+     * @param q numero du quad
+     * @return float
+     */
+     float area_of_quad(int q);
+
 	/**
 	 * @brief extrude un quad
 	 * @param q numero du quad

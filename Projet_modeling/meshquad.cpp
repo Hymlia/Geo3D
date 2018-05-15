@@ -378,9 +378,9 @@ void MeshQuad::extrude_quad(int q)
 
     // on remplace le quad initial par le quad du dessus
     m_quad_indices[q] = ni1;
-    m_quad_indices[q+1] = n12;
-    m_quad_indices[q+2] = n13;
-    m_quad_indices[q+3] = n14;
+    m_quad_indices[q+1] = ni2;
+    m_quad_indices[q+2] = ni3;
+    m_quad_indices[q+3] = ni4;
 
 
 	// on ajoute les 4 quads des cotes
@@ -401,15 +401,28 @@ void MeshQuad::transfo_quad(int q, const glm::mat4& tr)
     int i3 = m_quad_indices[q+2];
     int i4 = m_quad_indices[q+3];
 	// recuperation des (references de) points
-    Vec3 pt1 = m_points[i1];
-    Vec3 pt2 = m_points[i2];
-    Vec3 pt3 = m_points[i3];
-    Vec3 pt4 = m_points[i4];
+    Vec3& pt1 = m_points[i1];
+    Vec3& pt2 = m_points[i2];
+    Vec3& pt3 = m_points[i3];
+    Vec3& pt4 = m_points[i4];
 
 	// generation de la matrice de transfo globale:
 	// indice utilisation de glm::inverse() et de local_frame
+    Mat4 local = local_frame(q);
+
+    //une matrice est inversible si son déterminant est différent de 0
+        float determinant = glm::determinant(local);
+
+    if(determinant == 0) return;
+
+    Mat4 transfo =local*tr*glm::inverse(local);
 
 	// Application au 4 points du quad
+    pt1 = Vec3(transfo * Vec4(pt1.x,pt1.y,pt1.z,1));
+    pt2 = Vec3(transfo * Vec4(pt2.x,pt2.y,pt2.z,1));
+    pt3 = Vec3(transfo * Vec4(pt3.x,pt3.y,pt3.z,1));
+    pt4 = Vec3(transfo * Vec4(pt4.x,pt4.y,pt4.z,1));
+
 }
 
 void MeshQuad::decale_quad(int q, float d)
