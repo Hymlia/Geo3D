@@ -345,7 +345,6 @@ float MeshQuad::area_of_quad(int q) {
 
 void MeshQuad::extrude_quad(int q)
 {
-    std::cout << "dans extrude, q = " << q << std::endl;
     // recuperation des indices de points
     int i1 = m_quad_indices[q];
     int i2 = m_quad_indices[q+1];

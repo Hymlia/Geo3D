@@ -99,6 +99,16 @@ void glace(MeshQuad& m) {
 
 }
 
+void recursif(MeshQuad& m, int q) {
+    if(q=0) {
+
+    }
+}
+
+void appelrecursif(MeshQuad& m) {
+    m.create_cube();
+    recursif(m,0);
+}
 
 
 int main(int argc, char *argv[])
